@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NovaX | Crypto Markets</title>
+<style>
+:root{--bg:#0a1020;--panel:#111a2c;--panel2:#17233a;--line:#283650;--text:#eef3ff;--muted:#93a3bf;--blue:#6488ff;--green:#20c997;--red:#ff647c;--cyan:#2aa9e0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input{font:inherit}button{border:0;border-radius:9px;padding:10px 14px;font-weight:750;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.top{height:72px;padding:0 max(20px,calc((100% - 1280px)/2));display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#0d1527;position:sticky;top:0;z-index:4}.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:850}.mark{width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#6488ff,#a16aff)}.nav{display:flex;gap:23px;color:var(--muted)}.nav a{color:inherit;text-decoration:none}.nav a:hover{color:white}.right{display:flex;gap:8px;align-items:center}.btn-blue{background:var(--blue);color:#fff}.btn-quiet{background:#202d46;color:var(--text)}.btn-green{background:#143c34;color:#62e3b8}.btn-red{background:#402331;color:#ff8ba0}.pill{font-size:11px;color:#f4d58e;background:#302819;border:1px solid #594728;border-radius:6px;padding:4px 7px;font-weight:800}.wrap{max-width:1280px;margin:auto;padding:24px 20px 70px}.notice{padding:11px 14px;border-radius:10px;border:1px solid #51462c;background:#211d16;color:#efdcae;margin-bottom:22px}.heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.heading h1{font-size:27px;margin:0}.muted{color:var(--muted)}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}.metric-label{font-size:12px;color:var(--muted)}.metric{font-size:25px;font-weight:850;margin:6px 0}.green{color:var(--green)}.red{color:var(--red)}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.75fr);gap:18px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.section-head h2{font-size:16px;margin:0}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;white-space:nowrap}.table th,.table td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left}.table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}.table tr:last-child td{border-bottom:0}.coin{display:flex;gap:9px;align-items:center;font-weight:750}.coin-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;background:#263550}.coin small{display:block;font-size:11px;color:var(--muted);font-weight:500}.price{font-variant-numeric:tabular-nums}.chart{height:210px;width:100%;background:linear-gradient(180deg,#152b31,transparent);border-radius:9px}.field{margin:13px 0}.field label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}.field input{width:100%;padding:12px;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:white;outline:none}.field input:focus{border-color:var(--blue)}.wide{width:100%;margin-top:8px}.tabs{display:flex;gap:6px;background:#0b1324;padding:4px;border-radius:9px}.tabs button{flex:1;background:transparent;color:var(--muted);padding:8px}.tabs button.active{background:#263754;color:white}.balance{font-size:29px;font-weight:850}.footnote{font-size:11px;color:var(--muted);margin-top:12px}.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.support-fab{position:fixed;right:22px;bottom:22px;z-index:6;background:var(--cyan);color:white;border-radius:999px;padding:13px 17px;box-shadow:0 8px 30px #0008;display:flex;gap:9px;align-items:center}.overlay{display:none;position:fixed;inset:0;z-index:10;background:#020612c9;align-items:center;justify-content:center;padding:18px}.overlay.show{display:flex}.modal{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:23px;box-shadow:0 20px 80px #0009}.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modal h2{margin:0;font-size:21px}.x{background:#263650;color:white;padding:6px 10px}.switch{display:flex;gap:8px;margin:14px 0}.switch button{flex:1;background:#202d46;color:var(--muted)}.switch button.active{background:#33466a;color:white}.msg{min-height:20px;color:#ffc2cb;font-size:12px;margin-top:8px}.hidden{display:none!important}.small{font-size:12px}.loading{text-align:center;padding:22px;color:var(--muted)}.mobile-only{display:none}
+@media(max-width:900px){.nav{display:none}.grid4{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.top{padding:0 15px}.table th:nth-child(4),.table td:nth-child(4){display:none}}
+@media(max-width:480px){.wrap{padding:16px 11px 85px}.grid4{gap:8px}.card{padding:13px}.metric{font-size:20px}.heading h1{font-size:22px}.right .btn-quiet{display:none}.support-fab{right:12px;bottom:12px}.table th,.table td{padding:10px 6px;font-size:12px}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="brand"><span class="mark">N</span> NovaX</div>
+ <nav class="nav"><a href="#markets">Markets</a><a href="#trade">Trade</a><a href="#wallet">Wallet</a></nav>
+ <div class="right"><span id="userBadge" class="muted small hidden"></span><button id="authButton" class="btn-blue" onclick="openAuth('login')">Login / Register</button><button id="logoutButton" class="btn-quiet hidden" onclick="logout()">Log out</button></div>
+</header>
+<main class="wrap">
+ <div class="notice"><strong>Preview environment:</strong> market quotes are fetched from a public market-data source when available. Accounts and orders are browser-only; no real funds, deposits, withdrawals, or trades are processed.</div>
+ <div class="heading"><div><h1>Dashboard</h1><div class="muted">Your market overview at a glance</div></div><span class="pill">MARKET DATA</span></div>
+ <section class="grid4">
+  <div class="card"><div class="metric-label">Account Balance</div><div class="metric">0.00 <span class="muted" style="font-size:13px">USDT</span></div><div class="muted small">Available balance</div></div>
+  <div class="card"><div class="metric-label">Bitcoin (BTC)</div><div class="metric" id="topBTC">Loading…</div><div id="btcChange" class="muted small">Market quote</div></div>
+  <div class="card"><div class="metric-label">Ethereum (ETH)</div><div class="metric" id="topETH">Loading…</div><div id="ethChange" class="muted small">Market quote</div></div>
+  <div class="card"><div class="metric-label">Tracked Assets</div><div class="metric">20</div><div class="muted small">Public market list</div></div>
+ </section>
+ <div class="layout">
+  <div>
+   <section class="card" style="margin-bottom:18px">
+    <div class="section-head"><h2>Market Snapshot</h2><button class="btn-quiet small" onclick="loadMarkets()">Refresh prices</button></div>
+    <svg class="chart" viewBox="0 0 800 210" preserveAspectRatio="none" aria-label="Illustrative market trend">
+     <g stroke="#283650"><path d="M0 40H800M0 85H800M0 130H800M0 175H800"/></g>
+     <path d="M0 164 L35 145 L70 155 L105 118 L140 132 L175 95 L210 111 L245 82 L280 102 L315 69 L350 83 L385 57 L420 78 L455 49 L490 67 L525 39 L560 59 L595 31 L630 49 L665 24 L700 40 L735 20 L770 33 L800 15" fill="none" stroke="#20c997" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+     <g fill="#93a3bf" font-size="11"><text x="8" y="201">Trend illustration</text><text x="690" y="201">Not a trading chart</text></g>
+    </svg>
+    <div class="footnote">Live quotes are indicative only. This chart is illustrative, not historical exchange data.</div>
+   </section>
+   <section class="card" id="markets">
+    <div class="section-head"><h2>Live Market</h2><span class="muted small" id="marketStatus">Connecting to market data…</span></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Coin</th><th>Price (USD)</th><th>24h Change</th><th>Market Cap</th><th>Action</th></tr></thead><tbody id="marketRows"><tr><td colspan="5" class="loading">Loading public market prices…</td></tr></tbody></table></div>
+    <div class="footnote">Market data is supplied by CoinGecko's public API if reachable from your browser. Quotes may be delayed or unavailable.</div>
+   </section>
+  </div>
+  <aside>
+   <section class="card" id="trade">
+    <div class="section-head"><h2>Trade</h2><span class="pill">PREVIEW</span></div>
+    <div class="tabs"><button id="buyTab" class="active" onclick="setSide('Buy')">Buy</button><button id="sellTab" onclick="setSide('Sell')">Sell</button></div>
+    <div class="field"><label>Coin</label><input id="tradeCoin" value="Bitcoin (BTC)" readonly></div>
+    <div class="field"><label>Amount <span id="tradeSymbol">BTC</span></label><input id="tradeAmount" type="number" min="0" step="any" placeholder="0.00"></div>
+    <div class="field"><label>Estimated total <span>USD</span></label><input id="tradeTotal" readonly placeholder="0.00"></div>
+    <button class="btn-blue wide" onclick="previewTrade()">Preview order</button>
+    <div id="tradeMsg" class="footnote">Sign in to preview a simulated order.</div>
+   </section>
+   <section class="card" id="wallet" style="margin-top:18px">
+    <div class="section-head"><h2>Wallet</h2><span class="muted small">USDT</span></div>
+    <div class="metric-label">Total account balance</div><div class="balance">0.00 <span class="muted" style="font-size:14px">USDT</span></div>
+    <div class="actions-grid" style="margin-top:17px"><button class="btn-green" onclick="openSupport('deposit')">Deposit</button><button class="btn-red" onclick="openSupport('withdraw')">Withdraw</button></div>
+    <div class="footnote">These buttons open the listed support contact only. No payment, deposit, or withdrawal is performed on this page.</div>
+   </section>
+   <section class="card" style="margin-top:18px"><div class="section-head"><h2>Account Security</h2></div><p class="muted small">Use the login panel to explore the interface. This browser-only preview does not create a secure server account. Do not enter a password you use elsewhere.</p><button class="btn-quiet wide" onclick="openAuth('register')">Create preview account</button></section>
+  </aside>
+ </div>
+</main>
+<button class="support-fab" onclick="openSupport('general')"><span>➤</span> Customer Support</button>
+
+<div class="overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-top"><h2 id="authTitle">Welcome back</h2><button class="x" onclick="closeAuth()">✕</button></div>
+  <div class="muted small">Preview account only. Never reuse an important password here.</div>
+  <div class="switch"><button id="loginMode" class="active" onclick="setAuthMode('login')">Login</button><button id="registerMode" onclick="setAuthMode('register')">Register</button></div>
+  <form id="authForm">
+   <div class="field"><label>Mobile number</label><input id="phone" type="tel" autocomplete="tel" placeholder="e.g. +8801XXXXXXXXX" required minlength="6"></div>
+   <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required minlength="6"></div>
+   <button id="authSubmit" class="btn-blue wide" type="submit">Login</button><div id="authMsg" class="msg"></div>
+  </form>
+  <div class="footnote">This prototype stores account details only in this browser session and is not suitable for real users or real funds.</div>
+ </div>
+</div>
+<div class="overlay" id="supportOverlay" onclick="if(event.target===this)closeSupport()">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+  <div class="modal-top"><h2 id="supportTitle">Customer Support</h2><button class="x" onclick="closeSupport()">✕</button></div>
+  <p id="supportCopy" class="muted">Contact on Telegram.</p>
+  <div class="field"><label>Telegram ID</label><input id="telegramId" value="@treasury_io" readonly></div>
+  <button class="btn-quiet wide" onclick="copyTelegram()">Copy Telegram ID</button>
+  <a href="https://t.me/treasury_io" target="_blank" rel="noopener noreferrer" class="btn-blue wide" style="display:block;text-align:center;text-decoration:none;margin-top:9px">Open Telegram</a>
+  <div class="footnote">The page does not verify who controls this Telegram account. Never send passwords, seed phrases, or private keys to support.</div>
+ </div>
+</div>
+<script>
+const coinList=[
+ ['bitcoin','Bitcoin','BTC'],['ethereum','Ethereum','ETH'],['tether','Tether','USDT'],['binancecoin','BNB','BNB'],['solana','Solana','SOL'],
+ ['ripple','XRP','XRP'],['usd-coin','USDC','USDC'],['dogecoin','Dogecoin','DOGE'],['tron','TRON','TRX'],['the-open-network','Toncoin','TON'],
+ ['cardano','Cardano','ADA'],['avalanche-2','Avalanche','AVAX'],['shiba-inu','Shiba Inu','SHIB'],['chainlink','Chainlink','LINK'],['polkadot','Polkadot','DOT'],
+ ['bitcoin-cash','Bitcoin Cash','BCH'],['litecoin','Litecoin','LTC'],['stellar','Stellar','XLM'],['near','NEAR Protocol','NEAR'],['uniswap','Uniswap','UNI']
+];
+let prices={}, selectedCoin=coinList[0], side='Buy', authMode='login', currentUser=null;
+const fmt=n=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:Number(n)<1?6:2}):'—';
+const shortMoney=n=>Number.isFinite(Number(n))?'$'+Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(n):'—';
+function setSide(s){side=s;document.getElementById('buyTab').classList.toggle('active',s==='Buy');document.getElementById('sellTab').classList.toggle('active',s==='Sell');}
+function setCoin(id){selectedCoin=coinList.find(c=>c[0]===id)||coinList[0];document.getElementById('tradeCoin').value=selectedCoin[1]+' ('+selectedCoin[2]+')';document.getElementById('tradeSymbol').textContent=selectedCoin[2];calcTrade();}
+function calcTrade(){let amount=Number(document.getElementById('tradeAmount').value)||0;let p=prices[selectedCoin[0]]?.usd;document.getElementById('tradeTotal').value=p&&amount>0?(p*amount).toFixed(2):'';}
+document.getElementById('tradeAmount').addEventListener('input',calcTrade);
+async function loadMarkets(){
+ const status=document.getElementById('marketStatus'), rows=document.getElementById('marketRows');
+ status.textContent='Refreshing…';
+ try{
+  const ids=coinList.map(c=>c[0]).join(',');
+  const res=await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='+encodeURIComponent(ids)+'&order=market_cap_desc&per_page=20&page=1&sparkline=false',{headers:{accept:'application/json'}});
+  if(!res.ok)throw new Error('Market API unavailable');
+  const data=await res.json();prices={};data.forEach(d=>prices[d.id]={usd:d.current_price,change:d.price_change_percentage_24h,cap:d.market_cap});
+  if(!data.length)throw new Error('No market data');
+  rows.innerHTML=data.map(d=>{let c=coinList.find(x=>x[0]===d.id)||[d.id,d.name,d.symbol.toUpperCase()];let change=Number(d.price_change_percentage_24h);return `<tr><td><div class="coin"><span class="coin-icon">${esc(c[2].slice(0,1))}</span><span>${esc(c[1])}<small>${esc(c[2])}</small></span></div></td><td class="price">${fmt(d.current_price)}</td><td class="${change>=0?'green':'red'}">${Number.isFinite(change)?(change>=0?'+':'')+change.toFixed(2)+'%':'—'}</td><td>${shortMoney(d.market_cap)}</td><td><button class="btn-quiet small" onclick="chooseCoin('${escAttr(d.id)}')">Trade</button></td></tr>`}).join('');
+  document.getElementById('topBTC').textContent=fmt(prices.bitcoin?.usd);document.getElementById('topETH').textContent=fmt(prices.ethereum?.usd);
+  setChange('btcChange',prices.bitcoin?.change);setChange('ethChange',prices.ethereum?.change);
+  status.textContent='Updated '+new Date().toLocaleTimeString();
+  calcTrade();
+ }catch(e){status.textContent='Live data unavailable';rows.innerHTML='<tr><td colspan="5" class="loading">Could not load market prices. Check your internet connection or refresh later.</td></tr>';document.getElementById('topBTC').textContent='—';document.getElementById('topETH').textContent='—';}
+}
+function setChange(id,v){let el=document.getElementById(id);if(!Number.isFinite(Number(v))){el.textContent='24h change unavailable';return}el.textContent=(v>=0?'+':'')+Number(v).toFixed(2)+'% in 24h';el.className=(v>=0?'green':'red')+' small'}
+function chooseCoin(id){setCoin(id);document.getElementById('trade').scrollIntoView({behavior:'smooth'});document.getElementById('tradeMsg').textContent='Selected '+selectedCoin[1]+'. Orders are preview-only.'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escAttr(s){return String(s).replace(/[^a-z0-9-]/gi,'')}
+function openAuth(mode){setAuthMode(mode);document.getElementById('authOverlay').classList.add('show')}
+function closeAuth(){document.getElementById('authOverlay').classList.remove('show')}
+function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='login'?'Welcome back':'Create account';document.getElementById('authSubmit').textContent=mode==='login'?'Login':'Register';document.getElementById('loginMode').classList.toggle('active',mode==='login');document.getElementById('registerMode').classList.toggle('active',mode==='register');document.getElementById('authMsg').textContent='';document.getElementById('password').autocomplete=mode==='login'?'current-password':'new-password'}
+let memoryAccounts={};
+function getAccounts(){
+  try {
+    const raw=window.localStorage.getItem('novax_preview_accounts');
+    if(raw) return JSON.parse(raw);
+  } catch(e) {}
+  try {
+    const raw=window.sessionStorage.getItem('novax_preview_accounts');
+    if(raw) return JSON.parse(raw);
+  } catch(e) {}
+  return memoryAccounts;
+}
+function putAccounts(a){
+  memoryAccounts=a;
+  try { window.localStorage.setItem('novax_preview_accounts',JSON.stringify(a)); return; } catch(e) {}
+  try { window.sessionStorage.setItem('novax_preview_accounts',JSON.stringify(a)); } catch(e) {}
+}
+document.getElementById('authForm').addEventListener('submit',e=>{
+ e.preventDefault();const phone=document.getElementById('phone').value.trim(),password=document.getElementById('password').value;const msg=document.getElementById('authMsg');let accounts=getAccounts();
+ if(phone.length<6||password.length<6){msg.textContent='Enter a valid phone number and a password with at least 6 characters.';return}
+ if(authMode==='register'){
+   if(accounts[phone]){msg.textContent='This phone number already has a preview account. Please log in.';return}
+   accounts[phone]=password; putAccounts(accounts); currentUser=phone;
+   msg.style.color='#70e3b6'; msg.textContent='Account registered successfully.';
+   finishLogin();
+ } else {
+   if(!accounts[phone]||accounts[phone]!==password){msg.textContent='Incorrect phone number or password.';return}
+   currentUser=phone; finishLogin();
+ }
+});
+function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;document.getElementById('tradeMsg').textContent='Signed in to browser preview. Orders are not sent to an exchange.';closeAuth()}
+function logout(){currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('tradeMsg').textContent='Sign in to preview a simulated order.'}
+function previewTrade(){let amount=Number(document.getElementById('tradeAmount').value);if(!currentUser){openAuth('login');return}if(!amount||amount<=0){document.getElementById('tradeMsg').textContent='Enter an amount first.';return}document.getElementById('tradeMsg').textContent=side+' preview: '+amount+' '+selectedCoin[2]+' ≈ '+(document.getElementById('tradeTotal').value||'—')+' USD. No real order placed.'}
+function openSupport(kind){let copy=kind==='deposit'?'Deposit requests are not processed on this preview. You can open the supplied Telegram contact, but verify the account independently before trusting any payment instructions.':kind==='withdraw'?'Withdrawals are not processed on this preview. Never share your password, one-time codes, private key, or recovery phrase.':'Contact the supplied Telegram ID for general support; this site cannot verify the account owner.';document.getElementById('supportCopy').textContent=copy;document.getElementById('supportOverlay').classList.add('show')}
+function closeSupport(){document.getElementById('supportOverlay').classList.remove('show')}
+async function copyTelegram(){try{await navigator.clipboard.writeText('@treasury_io');alert('Telegram ID copied.')}catch(e){alert('Telegram ID: @treasury_io')}}
+loadMarkets();setInterval(loadMarkets,60000);
+</script>
+</body></html>
