@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <title>NovaX | Crypto Markets</title>
 <style>
 :root{--bg:#0a1020;--panel:#111a2c;--panel2:#17233a;--line:#283650;--text:#eef3ff;--muted:#93a3bf;--blue:#6488ff;--green:#20c997;--red:#ff647c;--cyan:#2aa9e0}
@@ -176,23 +177,21 @@ function escAttr(s){return String(s).replace(/[^a-z0-9-]/gi,'')}
 function openAuth(mode){setAuthMode(mode);document.getElementById('authOverlay').classList.add('show')}
 function closeAuth(){document.getElementById('authOverlay').classList.remove('show')}
 function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='login'?'Welcome back':'Create account';document.getElementById('authSubmit').textContent=mode==='login'?'Login':'Register';document.getElementById('authForgotButton').classList.toggle('hidden',mode!=='login');document.getElementById('loginMode').classList.toggle('active',mode==='login');document.getElementById('registerMode').classList.toggle('active',mode==='register');document.getElementById('authMsg').textContent='';document.getElementById('password').autocomplete=mode==='login'?'current-password':'new-password'}
-let memoryAccounts={};
-function getAccounts(){
-  try {
-    const raw=window.localStorage.getItem('novax_preview_accounts');
-    if(raw) return JSON.parse(raw);
-  } catch(e) {}
-  try {
-    const raw=window.sessionStorage.getItem('novax_preview_accounts');
-    if(raw) return JSON.parse(raw);
-  } catch(e) {}
-  return memoryAccounts;
-}
-function putAccounts(a){
-  memoryAccounts=a;
-  try { window.localStorage.setItem('novax_preview_accounts',JSON.stringify(a)); return; } catch(e) {}
-  try { window.sessionStorage.setItem('novax_preview_accounts',JSON.stringify(a)); } catch(e) {}
-}
+// Supabase backend configuration (phone + password, no OTP).
+// In Supabase Dashboard, Authentication > Providers > Phone: enable Phone provider.
+// In Authentication settings, turn OFF 'Confirm phone' to avoid OTP confirmation.
+// This means phone ownership is NOT verified. Never put a service_role key in a browser file.
+const SUPABASE_URL = 'https://moeedqrjyewxnefzpkdf.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_1SiSqyON05CujsHpnlvJ1Q_9dnWVfxA';
+let supabaseClient = null;
+let backendReady = false;
+try {
+  if (window.supabase && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includes('PASTE_')) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    backendReady = true;
+  }
+} catch (err) { console.error('Supabase initialization failed:', err); }
+
 function normalizePhone(raw, code){
  const input=String(raw||'').trim().replace(/[\s().-]/g,'');
  let phone;
@@ -202,50 +201,64 @@ function normalizePhone(raw, code){
 }
 function isValidInternationalPhone(phone){
  if(!/^\+[1-9]\d{7,14}$/.test(phone)) return false;
- // Bangladesh mobile numbers must use the complete +8801XXXXXXXXX format.
  if(phone.startsWith('+880')) return /^\+8801\d{9}$/.test(phone);
  return true;
 }
-document.getElementById('authForm').addEventListener('submit',e=>{
+document.getElementById('authForm').addEventListener('submit', async e=>{
  e.preventDefault();
  const rawPhone=document.getElementById('phone').value;
  const code=document.getElementById('countryCode').value;
  const phone=normalizePhone(rawPhone,code);
  const password=document.getElementById('password').value;
  const msg=document.getElementById('authMsg');
- let accounts=getAccounts();
  msg.style.color='#ffc2cb';
  if(!isValidInternationalPhone(phone)){
    msg.textContent='সঠিক country code-সহ সম্পূর্ণ মোবাইল নম্বর লিখুন, যেমন +8801XXXXXXXXX।';
    return;
  }
- if(password.length<6){
-   msg.textContent='পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';
+ if(password.length<6){msg.textContent='পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';return;}
+ if(!backendReady || !supabaseClient){
+   msg.textContent='Backend এখনো সংযুক্ত করা হয়নি। HTML-এর Supabase URL ও anon key বসিয়ে আবার চেষ্টা করুন।';
    return;
  }
- if(authMode==='register'){
-   if(Object.prototype.hasOwnProperty.call(accounts,phone)){
-     msg.textContent='এই মোবাইল নম্বর দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট খোলা হয়েছে। অনুগ্রহ করে Login করুন।';
-     return;
+ const submit=document.getElementById('authSubmit');
+ submit.disabled=true;
+ try {
+   if(authMode==='register'){
+     const {data,error}=await supabaseClient.auth.signUp({phone,password});
+     if(error) throw error;
+     if(data.session){
+       currentUser=phone;
+       msg.style.color='#70e3b6';
+       msg.textContent='Account registered successfully.';
+       finishLogin();
+     } else {
+       msg.style.color='#70e3b6';
+       msg.textContent='রেজিস্ট্রেশন অনুরোধ গ্রহণ করা হয়েছে। Supabase-এ Confirm phone বন্ধ আছে কি না যাচাই করুন; চালু থাকলে OTP লাগতে পারে।';
+     }
+   } else {
+     const {data,error}=await supabaseClient.auth.signInWithPassword({phone,password});
+     if(error) throw error;
+     currentUser=data.user?.phone || phone;
+     finishLogin();
    }
-   accounts[phone]=password;
-   putAccounts(accounts);
-   currentUser=phone;
-   msg.style.color='#70e3b6';
-   msg.textContent='Account registered successfully.';
-   finishLogin();
- } else {
-   // A matching phone number alone is never enough: the password must match.
-   if(!Object.prototype.hasOwnProperty.call(accounts,phone)||accounts[phone]!==password){
-     msg.textContent='মোবাইল নম্বর অথবা পাসওয়ার্ড সঠিক নয়।';
-     return;
-   }
-   currentUser=phone;
-   finishLogin();
- }
+ } catch(err) {
+   const raw=String(err?.message||'');
+   if(/already registered|already exists|duplicate|unique/i.test(raw)) msg.textContent='এই মোবাইল নম্বর দিয়ে ইতোমধ্যে অ্যাকাউন্ট খোলা হয়েছে। অনুগ্রহ করে Login করুন।';
+   else if(/invalid login credentials/i.test(raw)) msg.textContent='মোবাইল নম্বর অথবা পাসওয়ার্ড সঠিক নয়।';
+   else msg.textContent='অনুরোধ সম্পন্ন হয়নি: '+raw+' (Supabase Phone Auth সেটিংস যাচাই করুন।)';
+ } finally {submit.disabled=false;}
 });
+if(backendReady){
+ supabaseClient.auth.getSession().then(({data})=>{
+   if(data?.session?.user?.phone){currentUser=data.session.user.phone;finishLogin();}
+ });
+ supabaseClient.auth.onAuthStateChange((_event,session)=>{
+   if(session?.user?.phone){currentUser=session.user.phone;}
+ });
+}
 function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;document.getElementById('tradeMsg').textContent='আপনি লগইন করেছেন। অর্ডার দেওয়ার আগে সব তথ্য যাচাই করুন।';closeAuth()}
-function logout(){currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('settingsButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('tradeMsg').textContent='Sign in to preview a simulated order.'}
+async function logout(){if(backendReady&&supabaseClient){try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}}currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('settingsButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('tradeMsg').textContent='Sign in to preview a simulated order.'}
 function previewTrade(){let amount=Number(document.getElementById('tradeAmount').value);let total=Number(document.getElementById('tradeTotal').value)||0;const tradeMsg=document.getElementById('tradeMsg');if(side==='Sell'){const balanceText=document.querySelector('#wallet .balance')?.childNodes[0]?.textContent||'0';const accountBalance=Number(balanceText.replace(/[^0-9.-]/g,''))||0;if(accountBalance<=0){tradeMsg.textContent='আপনার অ্যাকাউন্টে ব্যালেন্স নাই';tradeMsg.style.color='#ff8ba0';return}}if(total<100){tradeMsg.textContent='ন্যূনতম অর্ডার 100 USDT।';return}if(!amount||amount<=0){tradeMsg.textContent='অনুগ্রহ করে সঠিক পরিমাণ লিখুন।';return}const message='NovaX '+side+' request: '+selectedCoin[1]+' ('+selectedCoin[2]+'), amount '+amount+', estimated USD '+(document.getElementById('tradeTotal').value||'not available')+'. Please confirm price and details.';tradeMsg.textContent='Telegram কাস্টমার সাপোর্ট খুলছে। মূল্য ও শর্তাবলি সাপোর্টের সঙ্গে নিশ্চিত করুন।';tradeMsg.style.color='';window.open('https://t.me/treasury_io','_blank','noopener,noreferrer');}
 const TELEGRAM_USERNAME='treasury_io'; // Telegram username without @
 function telegramUrl(){return 'https://t.me/'+TELEGRAM_USERNAME}
