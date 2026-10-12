@@ -21,7 +21,7 @@
  <div class="notice"><strong>NovaX সেবার প্রতিশ্রুতি:</strong> স্বচ্ছ তথ্য, ব্যবহারকারীর নিরাপত্তা এবং সহায়ক কাস্টমার সাপোর্ট—এই তিনটি বিষয়কে আমরা গুরুত্ব দিই। যেকোনো লেনদেনের আগে ঠিকানা ও পরিমাণ ভালোভাবে যাচাই করুন।</div>
  <div class="heading"><div><h1>Dashboard</h1><div class="muted">Your market overview at a glance</div></div><span class="pill">MARKET DATA</span></div>
  <section class="grid4">
-  <div class="card"><div class="metric-label">Account Balance</div><div class="metric">0.00 <span class="muted" style="font-size:13px">USDT</span></div><div class="muted small">Available balance</div></div>
+  <div class="card"><div class="metric-label">Account Balance</div><div class="metric" id="topBalance">0.00 <span class="muted" style="font-size:13px">USDT</span></div><div class="muted small">Available balance</div></div>
   <div class="card"><div class="metric-label">Bitcoin (BTC)</div><div class="metric" id="topBTC">Loading…</div><div id="btcChange" class="muted small">Market quote</div></div>
   <div class="card"><div class="metric-label">Ethereum (ETH)</div><div class="metric" id="topETH">Loading…</div><div id="ethChange" class="muted small">Market quote</div></div>
   <div class="card"><div class="metric-label">Tracked Assets</div><div class="metric">20</div><div class="muted small">Public market list</div></div>
@@ -45,17 +45,17 @@
   </div>
   <aside>
    <section class="card" id="trade">
-    <div class="section-head"><h2>Buy / Sell</h2></div><p class="service-copy" style="margin:0 0 12px">নিরাপদে ডলার কিনতে বা বিক্রি করতে গ্রাহক সেবায় যোগাযোগ করুন।</p>
+    <div class="section-head"><h2>Buy / Sell</h2></div>
     <div class="tabs"><button id="buyTab" class="active" onclick="setSide('Buy')">Buy</button><button id="sellTab" onclick="setSide('Sell')">Sell</button></div>
-    <div class="field"><label for="tradeCoin">Coin নির্বাচন করুন</label><select id="tradeCoin" onchange="setCoin(this.value)" style="width:100%;padding:12px;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:white"><option value="bitcoin">Bitcoin (BTC)</option></select></div>
-    <div class="field"><label>Amount <span id="tradeSymbol">BTC</span></label><input id="tradeAmount" type="number" min="0" step="any" placeholder="0.00"><small style="display:block;margin-top:6px;color:var(--muted)">ন্যূনতম অর্ডার 100 USDT (আনুমানিক USD মূল্য)</small></div>
+    <div class="field"><label for="tradeCoin">Coin</label><select id="tradeCoin" onchange="setCoin(this.value)" style="width:100%;padding:12px;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:white"><option value="bitcoin">Bitcoin (BTC)</option></select></div>
+    <div class="field"><label>Amount <span id="tradeSymbol">BTC</span></label><input id="tradeAmount" type="number" min="0" step="any" placeholder="0.00"><small style="display:block;margin-top:6px;color:var(--muted)">Buy হলে USDT থেকে কয়েন convert হবে; Sell হলে কয়েন থেকে USDT হবে</small></div>
     <div class="field"><label>Estimated total <span>USD</span></label><input id="tradeTotal" readonly placeholder="0.00"></div>
-    <button id="tradeOrderButton" class="btn-blue wide" disabled onclick="previewTrade()">Order / গ্রাহক সেবায় যোগাযোগ</button>
+    <button id="tradeOrderButton" class="btn-blue wide" disabled onclick="previewTrade()">Order</button>
     <div id="tradeMsg" class="footnote">আপনার নির্বাচিত কয়েন ও পরিমাণ নিয়ে কাস্টমার সাপোর্টে যোগাযোগ করুন।</div><div class="footnote">স্বচ্ছ যোগাযোগ, লেনদেনের আগে মূল্য ও নেটওয়ার্ক যাচাই, এবং আপনার অ্যাকাউন্টের তথ্যের গোপনীয়তা—আমাদের অগ্রাধিকার। পাসওয়ার্ড, OTP বা private key কখনো শেয়ার করবেন না।</div>
    </section>
    <section class="card" id="wallet" style="margin-top:18px">
     <div class="section-head"><h2>Wallet</h2><span class="muted small">USDT</span></div>
-    <div class="metric-label">Total account balance</div><div class="balance">0.00 <span class="muted" style="font-size:14px">USDT</span></div>
+    <div class="metric-label">Total account balance</div><div class="balance" id="walletBalance">0.00 <span class="muted" style="font-size:14px">USDT</span></div><div class="footnote" id="coinHoldings">Coin holdings: —</div>
     <div class="actions-grid" style="margin-top:17px"><button class="btn-green" onclick="openSupport('deposit')">Deposit</button><button class="btn-red" onclick="openSupport('withdraw')">Withdraw</button></div>
     <div class="footnote">আপনার অ্যাকাউন্টের নিরাপত্তা আমাদের কাছে গুরুত্বপূর্ণ। ডিপোজিট বা উত্তোলনের আগে ঠিকানা ও পরিমাণ যাচাই করুন এবং প্রয়োজনে কাস্টমার সাপোর্টের সহায়তা নিন।</div>
    </section>
@@ -141,9 +141,9 @@ let prices={}, selectedCoin=coinList[0], side='Buy', authMode='login', currentUs
 const tradeCoinSelect=document.getElementById('tradeCoin');tradeCoinSelect.innerHTML=coinList.map(c=>`<option value="${escAttr(c[0])}">${esc(c[1])} (${esc(c[2])})</option>`).join('');
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:Number(n)<1?6:2}):'—';
 const shortMoney=n=>Number.isFinite(Number(n))?'$'+Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(n):'—';
-function setSide(s){side=s;document.getElementById('buyTab').classList.toggle('active',s==='Buy');document.getElementById('sellTab').classList.toggle('active',s==='Sell');}
+function setSide(s){side=s;document.getElementById('buyTab').classList.toggle('active',s==='Buy');document.getElementById('sellTab').classList.toggle('active',s==='Sell');calcTrade();}
 function setCoin(id){selectedCoin=coinList.find(c=>c[0]===id)||coinList[0];document.getElementById('tradeCoin').value=selectedCoin[0];document.getElementById('tradeSymbol').textContent=selectedCoin[2];calcTrade();}
-function calcTrade(){let amount=Number(document.getElementById('tradeAmount').value)||0;let p=prices[selectedCoin[0]]?.usd;let total=p&&amount>0?p*amount:0;document.getElementById('tradeTotal').value=total>0?total.toFixed(2):'';const orderButton=document.getElementById('tradeOrderButton');orderButton.disabled=total<100;const msg=document.getElementById('tradeMsg');if(total>0&&total<100){msg.textContent='ন্যূনতম অর্ডার 100 USDT। পরিমাণ বাড়ান; আনুমানিক মূল্য 100 USD বা তার বেশি হলে Order বাটন চালু হবে।'}else if(total>=100){msg.textContent='পরিমাণ গ্রহণযোগ্য। Order বাটনে ক্লিক করে কাস্টমার সাপোর্টে যোগাযোগ করুন।'}else{msg.textContent='কয়েন ও পরিমাণ নির্বাচন করুন। ন্যূনতম অর্ডার 100 USDT।'}}
+function calcTrade(){let amount=Number(document.getElementById('tradeAmount').value)||0;let p=prices[selectedCoin[0]]?.usd;let total=p&&amount>0?p*amount:0;document.getElementById('tradeTotal').value=total>0?total.toFixed(2):'';const orderButton=document.getElementById('tradeOrderButton');orderButton.disabled=!(currentUser && total>0 && p>0);const msg=document.getElementById('tradeMsg');if(!currentUser){msg.textContent='Login করুন, তারপর আপনার balance দিয়ে convert করুন.'}else if(total>0){msg.textContent=side==='Buy'?'Estimated cost: '+total.toFixed(2)+' USDT. Order করলে USDT কেটে coin যোগ হবে.':'Estimated value: '+total.toFixed(2)+' USDT. Order করলে coin কেটে USDT যোগ হবে.'}else{msg.textContent='কয়েনের পরিমাণ লিখুন।'}}
 document.getElementById('tradeAmount').addEventListener('input',calcTrade);
 async function loadMarkets(){
  const status=document.getElementById('marketStatus'), rows=document.getElementById('marketRows');
@@ -257,9 +257,22 @@ if(backendReady){
    if(session?.user?.phone){currentUser=session.user.phone;}
  });
 }
-function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;document.getElementById('tradeMsg').textContent='আপনি লগইন করেছেন। অর্ডার দেওয়ার আগে সব তথ্য যাচাই করুন।';closeAuth()}
-async function logout(){if(backendReady&&supabaseClient){try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}}currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('settingsButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('tradeMsg').textContent='Sign in to preview a simulated order.'}
-function previewTrade(){let amount=Number(document.getElementById('tradeAmount').value);let total=Number(document.getElementById('tradeTotal').value)||0;const tradeMsg=document.getElementById('tradeMsg');if(side==='Sell'){const balanceText=document.querySelector('#wallet .balance')?.childNodes[0]?.textContent||'0';const accountBalance=Number(balanceText.replace(/[^0-9.-]/g,''))||0;if(accountBalance<=0){tradeMsg.textContent='আপনার অ্যাকাউন্টে ব্যালেন্স নাই';tradeMsg.style.color='#ff8ba0';return}}if(total<100){tradeMsg.textContent='ন্যূনতম অর্ডার 100 USDT।';return}if(!amount||amount<=0){tradeMsg.textContent='অনুগ্রহ করে সঠিক পরিমাণ লিখুন।';return}const message='NovaX '+side+' request: '+selectedCoin[1]+' ('+selectedCoin[2]+'), amount '+amount+', estimated USD '+(document.getElementById('tradeTotal').value||'not available')+'. Please confirm price and details.';tradeMsg.textContent='Telegram কাস্টমার সাপোর্ট খুলছে। মূল্য ও শর্তাবলি সাপোর্টের সঙ্গে নিশ্চিত করুন।';tradeMsg.style.color='';window.open('https://t.me/treasury_io','_blank','noopener,noreferrer');}
+async function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;closeAuth();await refreshBalances();calcTrade()}
+async function refreshBalances(){if(!supabaseClient||!currentUser)return;const {data,error}=await supabaseClient.rpc('get_my_balance');if(error){console.error('Balance load failed',error);document.getElementById('tradeMsg').textContent='Balance load হয়নি: '+error.message;return}const b=Number(data)||0;document.getElementById('topBalance').innerHTML=b.toFixed(2)+' <span class="muted" style="font-size:13px">USDT</span>';document.getElementById('walletBalance').innerHTML=b.toFixed(2)+' <span class="muted" style="font-size:14px">USDT</span>';const {data:holdings,error:he}=await supabaseClient.rpc('get_my_coin_balances');if(!he&&Array.isArray(holdings)){document.getElementById('coinHoldings').textContent='Coin holdings: '+(holdings.filter(x=>Number(x.amount)>0).map(x=>Number(x.amount).toFixed(8)+' '+x.symbol).join(', ')||'None')}}
+async function logout(){if(backendReady&&supabaseClient){try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}}currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('settingsButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('topBalance').innerHTML='0.00 <span class="muted" style="font-size:13px">USDT</span>';document.getElementById('walletBalance').innerHTML='0.00 <span class="muted" style="font-size:14px">USDT</span>';document.getElementById('coinHoldings').textContent='Coin holdings: —';calcTrade()}
+async function previewTrade(){
+ const amount=Number(document.getElementById('tradeAmount').value), price=Number(prices[selectedCoin[0]]?.usd), tradeMsg=document.getElementById('tradeMsg');
+ if(!currentUser||!supabaseClient){tradeMsg.textContent='প্রথমে Login করুন।';return}
+ if(!Number.isFinite(amount)||amount<=0||!Number.isFinite(price)||price<=0){tradeMsg.textContent='সঠিক পরিমাণ বা market price পাওয়া যায়নি।';return}
+ const btn=document.getElementById('tradeOrderButton');btn.disabled=true;tradeMsg.style.color='';
+ try{
+  const {data,error}=await supabaseClient.rpc('convert_usdt_to_coin',{p_symbol:selectedCoin[2],p_side:side,p_coin_amount:amount,p_usd_price:price});
+  if(error)throw error;
+  await refreshBalances();tradeMsg.style.color='#70e3b6';
+  tradeMsg.textContent=side==='Buy'?'Conversion successful: '+amount+' '+selectedCoin[2]+' যোগ হয়েছে।':'Conversion successful: '+amount+' '+selectedCoin[2]+' বিক্রি হয়েছে।';
+ }catch(e){tradeMsg.style.color='#ff8ba0';tradeMsg.textContent='Conversion হয়নি: '+(e.message||'Unknown error')}
+ finally{calcTrade()}
+}
 const TELEGRAM_USERNAME='treasury_io'; // Telegram username without @
 function telegramUrl(){return 'https://t.me/'+TELEGRAM_USERNAME}
 function openTelegram(){window.open(telegramUrl(),'_blank','noopener,noreferrer')}
