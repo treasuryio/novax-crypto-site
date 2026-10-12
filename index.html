@@ -53,6 +53,13 @@
     </svg>
     <div class="footnote">Live quotes are indicative only. This chart is illustrative, not historical exchange data.</div>
    </section>
+   <section class="card" id="profitChart" style="margin-bottom:18px">
+    <div class="section-head"><div><h2>Profit / Loss Chart</h2><div class="muted small">Buy/Sell বা USDT থেকে coin conversion সফল হলে ট্রেডের হিসাব এখানে স্বয়ংক্রিয়ভাবে দেখাবে</div></div><button class="btn-quiet small" type="button" onclick="exportTradeHistory()">Export history</button></div>
+    <div style="display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px"><div><div class="metric-label">Total Profit / Loss (USDT)</div><div class="metric" id="profitTotal">0.00 <span class="muted" style="font-size:13px">USDT</span></div></div><div class="muted small" id="profitCount">0 trades</div></div>
+    <div id="profitChartCanvas" style="height:190px;width:100%;overflow:hidden;border-radius:9px;background:linear-gradient(180deg,#152b31,transparent)"><svg viewBox="0 0 800 190" preserveAspectRatio="none" style="width:100%;height:100%"><text x="400" y="95" fill="#93a3bf" text-anchor="middle">সফল Buy/Sell করলে এখানে Profit/Loss দেখাবে</text></svg></div>
+    <div class="footnote">প্রতি ট্রেডের date/time, opening/current price, bond, stop earning/stop-loss, service/overnight charge ও converted quantity দেখানো হবে। এই ট্রেড হিসাব এই ব্রাউজারে সংরক্ষিত; অন্য ডিভাইসে sync হয় না। আগে থেকে থাকা coin-এর ক্রয়মূল্য এই চার্ট জানে না, তাই প্রথমে রেকর্ড করা ট্রেড থেকেই লাভ/ক্ষতি হিসাব শুরু হবে।</div>
+    <div id="profitRecords" style="margin-top:14px"></div>
+   </section>
    <section class="card" id="markets">
     <div class="section-head"><h2>Live Market</h2><span class="muted small" id="marketStatus">Connecting to market data…</span></div>
     <div class="table-wrap"><table class="table"><thead><tr><th>Coin</th><th>Price (USD)</th><th>24h Change</th><th>Market Cap</th><th>Action</th></tr></thead><tbody id="marketRows"><tr><td colspan="5" class="loading">Loading public market prices…</td></tr></tbody></table></div>
@@ -219,7 +226,7 @@ async function loadMarkets(){
   document.getElementById('topBTC').textContent=fmt(prices.bitcoin?.usd);document.getElementById('topETH').textContent=fmt(prices.ethereum?.usd);
   setChange('btcChange',prices.bitcoin?.change);setChange('ethChange',prices.ethereum?.change);
   status.textContent='Updated '+new Date().toLocaleTimeString();
-  updatePortfolioDisplay();calcTrade();
+  updatePortfolioDisplay();calcTrade();renderProfitChart();
  }catch(e){
    status.textContent='Demo prices (live feed unavailable)';
    const demo=[['bitcoin','Bitcoin','BTC',67400,1.2,1330000000000],['ethereum','Ethereum','ETH',3500,0.8,420000000000],['tether','Tether','USDT',1,0.01,110000000000],['binancecoin','BNB','BNB',590,-0.4,86000000000],['solana','Solana','SOL',145,2.1,65000000000],['ripple','XRP','XRP',0.52,-0.6,29000000000],['usd-coin','USDC','USDC',1,0.0,32000000000],['dogecoin','Dogecoin','DOGE',0.15,1.4,21000000000],['tron','TRON','TRX',0.12,0.5,10500000000],['the-open-network','Toncoin','TON',6.2,-0.2,15000000000]];
@@ -228,7 +235,7 @@ async function loadMarkets(){
    document.getElementById('topBTC').textContent=fmt(prices.bitcoin.usd);
    document.getElementById('topETH').textContent=fmt(prices.ethereum.usd);
    setChange('btcChange',prices.bitcoin.change);setChange('ethChange',prices.ethereum.change);
-   updatePortfolioDisplay();calcTrade();
+   updatePortfolioDisplay();calcTrade();renderProfitChart();
 }
 }
 function setChange(id,v){let el=document.getElementById(id);if(!Number.isFinite(Number(v))){el.textContent='24h change unavailable';return}el.textContent=(v>=0?'+':'')+Number(v).toFixed(2)+'% in 24h';el.className=(v>=0?'green':'red')+' small'}
@@ -318,7 +325,7 @@ if(backendReady){
    if(session?.user?.phone){currentUser=session.user.phone;}
  });
 }
-async function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;closeAuth();await refreshBalances();calcTrade()}
+async function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;closeAuth();await refreshBalances();calcTrade();renderProfitChart()}
 async function refreshBalances(){
  if(!supabaseClient||!currentUser)return;
  const {data,error}=await supabaseClient.rpc('get_my_balance');
@@ -343,6 +350,7 @@ async function previewTrade(){
  try{
   const {data,error}=await supabaseClient.rpc('convert_usdt_to_coin',{p_symbol:selectedCoin[2],p_side:side,p_coin_amount:amount,p_usd_price:price});
   if(error)throw error;
+  recordSuccessfulTrade(side,selectedCoin[0],selectedCoin[2],amount,price);
   await refreshBalances();tradeMsg.style.color='#70e3b6';
   tradeMsg.textContent=side==='Buy'?'Conversion successful: '+amount+' '+selectedCoin[2]+' যোগ হয়েছে।':'Conversion successful: '+amount+' '+selectedCoin[2]+' বিক্রি হয়েছে।';
  }catch(e){tradeMsg.style.color='#ff8ba0';tradeMsg.textContent='Conversion হয়নি: '+(e.message||'Unknown error')}
@@ -446,6 +454,47 @@ function closeSettings(){document.getElementById('settingsOverlay').classList.re
 function openForgotPassword(){closeSettings();document.getElementById('forgotOverlay').classList.add('show')}
 function openForgotPasswordFromAuth(){closeAuth();document.getElementById('forgotOverlay').classList.add('show')}
 function closeForgotPassword(){document.getElementById('forgotOverlay').classList.remove('show')}
+
+// Automatic trade P/L journal. Local browser storage; this does not replace server-side accounting.
+const TRADE_LOG_KEY='novax_auto_trade_log_v2';
+const TRADE_LOTS_KEY='novax_auto_trade_lots_v2';
+function tradeStorageKey(base){return base+'_'+String(currentUser||'guest').replace(/[^a-zA-Z0-9_-]/g,'_')}
+function getTradeLog(){try{const v=JSON.parse(localStorage.getItem(tradeStorageKey(TRADE_LOG_KEY))||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+function getTradeLots(){try{const v=JSON.parse(localStorage.getItem(tradeStorageKey(TRADE_LOTS_KEY))||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}}
+function saveTradeData(rows,lots){localStorage.setItem(tradeStorageKey(TRADE_LOG_KEY),JSON.stringify(rows));localStorage.setItem(tradeStorageKey(TRADE_LOTS_KEY),JSON.stringify(lots));renderProfitChart()}
+function recordSuccessfulTrade(side,coinId,symbol,qty,price){
+ const rows=getTradeLog(),lots=getTradeLots(),quantity=Number(qty),opening=Number(price),now=new Date().toISOString();
+ if(!Number.isFinite(quantity)||quantity<=0||!Number.isFinite(opening)||opening<=0)return;
+ let realized=null,bond=quantity*opening;
+ const lot=lots[symbol]||{quantity:0,cost:0};
+ if(side==='Buy'){
+   lot.quantity=Number(lot.quantity||0)+quantity;lot.cost=Number(lot.cost||0)+bond;lots[symbol]=lot;
+ }else{
+   const available=Number(lot.quantity||0),avg=available>0?Number(lot.cost||0)/available:opening;
+   const knownQty=Math.min(quantity,available);bond=knownQty*avg+(quantity-knownQty)*opening;
+   realized=quantity*opening-bond;
+   lot.quantity=Math.max(0,available-quantity);lot.cost=Math.max(0,Number(lot.cost||0)-knownQty*avg);
+   if(lot.quantity<1e-12){lot.quantity=0;lot.cost=0}lots[symbol]=lot;
+ }
+ rows.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),side,coinId,symbol,quantity,openingPrice:opening,bond,realizedPL:realized,serviceCharge:0,overnightCharges:0,stopEarningPrice:null,stopLossPrice:null,createdAt:now});
+ saveTradeData(rows,lots);
+}
+function escapeTradeText(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmtTradeNum(v,n=8){return Number(v||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:n})}
+function currentCoinPrice(row){const v=Number(prices[row.coinId]?.usd);return Number.isFinite(v)&&v>0?v:Number(row.openingPrice||0)}
+function renderProfitChart(){
+ const rows=getTradeLog(),lots=getTradeLots();let realized=rows.reduce((sum,r)=>sum+(r.realizedPL==null?0:Number(r.realizedPL)||0),0),unrealized=0;
+ Object.keys(lots).forEach(sym=>{const lot=lots[sym],q=Number(lot.quantity)||0,cost=Number(lot.cost)||0;if(q<=0)return;const c=coinList.find(x=>x[2]===sym),price=c?Number(prices[c[0]]?.usd):0;if(price>0)unrealized+=q*price-cost});
+ const total=realized+unrealized,el=document.getElementById('profitTotal');if(!el)return;
+ el.innerHTML=(total<0?'-':'')+Math.abs(total).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:4})+' <span class="muted" style="font-size:13px">USDT</span>';el.className='metric '+(total<0?'red':total>0?'green':'');
+ document.getElementById('profitCount').textContent=rows.length+' trade'+(rows.length===1?'':'s')+' · Realized '+(realized>=0?'+':'')+fmtTradeNum(realized,4)+' · Open P/L '+(unrealized>=0?'+':'')+fmtTradeNum(unrealized,4);
+ const canvas=document.getElementById('profitChartCanvas');
+ if(!rows.length){canvas.innerHTML='<svg viewBox="0 0 800 190" preserveAspectRatio="none" style="width:100%;height:100%"><text x="400" y="95" fill="#93a3bf" text-anchor="middle">সফল Buy/Sell করলে এখানে Profit/Loss দেখাবে</text></svg>'}
+ else{let running=0;const vals=rows.map(r=>{running+=r.realizedPL==null?0:Number(r.realizedPL)||0;return running});const min=Math.min(0,...vals),max=Math.max(0,...vals),range=max-min||1;const pts=vals.map((v,i)=>({x:rows.length===1?400:40+i*720/(rows.length-1),y:160-(v-min)/range*125}));const path=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');const grid=[35,75,115,155].map(y=>`<path d="M20 ${y}H780" stroke="#283650"/>`).join('');const circles=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="#20c997"/>`).join('');canvas.innerHTML=`<svg viewBox="0 0 800 190" preserveAspectRatio="none" style="width:100%;height:100%">${grid}<path d="${path}" fill="none" stroke="#20c997" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}<text x="20" y="181" fill="#93a3bf" font-size="11">${escapeTradeText(new Date(rows[0].createdAt).toLocaleDateString())}</text><text x="780" y="181" fill="#93a3bf" font-size="11" text-anchor="end">${escapeTradeText(new Date(rows[rows.length-1].createdAt).toLocaleDateString())}</text></svg>`}
+ const list=document.getElementById('profitRecords');
+ list.innerHTML=rows.slice().reverse().map(r=>{const cp=currentCoinPrice(r),open=Number(r.openingPrice)||0,qty=Number(r.quantity)||0,unreal=r.side==='Buy'?qty*(cp-open)-Number(r.serviceCharge||0)-Number(r.overnightCharges||0):null,pl=r.realizedPL==null?unreal:Number(r.realizedPL)-Number(r.serviceCharge||0)-Number(r.overnightCharges||0),time=new Date(r.createdAt);return `<article style="padding:13px;margin-bottom:10px;border:1px solid var(--line);border-radius:11px;background:#0d1628"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><strong>${escapeTradeText(r.side==='Buy'?'Long':'Sell')} ${escapeTradeText(r.symbol)}/USDT x100</strong><span class="small muted">${escapeTradeText(time.toLocaleString())}</span></div><div class="small ${pl<0?'red':'green'}" style="font-weight:800;margin:5px 0 10px">${pl>=0?'+':''}${fmtTradeNum(pl,4)} USDT ${r.realizedPL==null?'(Unrealized P/L)':'(Realized P/L)'}</div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;font-size:11px;color:var(--muted)"><div>Opening Price: <b style="color:var(--text)">${fmtTradeNum(open,6)}</b></div><div>Current Price: <b style="color:var(--text)">${fmtTradeNum(cp,6)}</b></div><div>Stop Earning Price: <b style="color:var(--text)">${r.stopEarningPrice==null?'Not set':fmtTradeNum(r.stopEarningPrice,6)}</b></div><div>Bond: <b style="color:var(--text)">${fmtTradeNum(r.bond,4)} USDT</b></div><div>Stop-Loss Price: <b style="color:var(--text)">${r.stopLossPrice==null?'Not set':fmtTradeNum(r.stopLossPrice,6)}</b></div><div>Service Charge: <b style="color:var(--text)">${fmtTradeNum(r.serviceCharge,4)} USDT</b></div><div>Overnight Charges: <b style="color:var(--text)">${fmtTradeNum(r.overnightCharges,4)} USDT</b></div><div>Converted Quantity: <b style="color:var(--text)">${fmtTradeNum(qty)} ${escapeTradeText(r.symbol)}</b></div></div></article>`}).join('')||'<div class="muted small">এখনও কোনো সফল trade record নেই। Buy/Sell conversion সফল হলে এখানে স্বয়ংক্রিয়ভাবে যোগ হবে।</div>';
+}
+function exportTradeHistory(){const rows=getTradeLog();const blob=new Blob([JSON.stringify({trades:rows,lots:getTradeLots()},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='novax-trade-history.json';a.click();URL.revokeObjectURL(url)}
 loadMarkets();setInterval(loadMarkets,60000);
 </script>
 </body></html>
