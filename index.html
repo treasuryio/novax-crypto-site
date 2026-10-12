@@ -17,7 +17,7 @@
  <div class="right"><span id="userBadge" class="muted small hidden"></span><button id="settingsButton" class="settings-btn hidden" aria-label="Account settings" title="Account settings" onclick="openSettings()">⚙</button><button id="authButton" class="btn-blue" onclick="openAuth('login')">Login / Register</button><button id="logoutButton" class="btn-quiet hidden" onclick="logout()">Log out</button></div>
 </header>
 <main class="wrap">
- <div class="notice"><strong>Preview environment:</strong> market quotes are fetched from a public market-data source when available. Accounts and orders are browser-only; no real funds, deposits, withdrawals, or trades are processed.</div>
+ <div class="notice"><strong>NovaX সেবার প্রতিশ্রুতি:</strong> স্বচ্ছ তথ্য, ব্যবহারকারীর নিরাপত্তা এবং সহায়ক কাস্টমার সাপোর্ট—এই তিনটি বিষয়কে আমরা গুরুত্ব দিই। যেকোনো লেনদেনের আগে ঠিকানা ও পরিমাণ ভালোভাবে যাচাই করুন।</div>
  <div class="heading"><div><h1>Dashboard</h1><div class="muted">Your market overview at a glance</div></div><span class="pill">MARKET DATA</span></div>
  <section class="grid4">
   <div class="card"><div class="metric-label">Account Balance</div><div class="metric">0.00 <span class="muted" style="font-size:13px">USDT</span></div><div class="muted small">Available balance</div></div>
@@ -44,21 +44,21 @@
   </div>
   <aside>
    <section class="card" id="trade">
-    <div class="section-head"><h2>Trade</h2><span class="pill">PREVIEW</span></div>
+    <div class="section-head"><h2>Buy / Sell</h2></div><p class="service-copy" style="margin:0 0 12px">নিরাপদে ডলার কিনতে বা বিক্রি করতে গ্রাহক সেবায় যোগাযোগ করুন।</p>
     <div class="tabs"><button id="buyTab" class="active" onclick="setSide('Buy')">Buy</button><button id="sellTab" onclick="setSide('Sell')">Sell</button></div>
-    <div class="field"><label>Coin</label><input id="tradeCoin" value="Bitcoin (BTC)" readonly></div>
-    <div class="field"><label>Amount <span id="tradeSymbol">BTC</span></label><input id="tradeAmount" type="number" min="0" step="any" placeholder="0.00"></div>
+    <div class="field"><label for="tradeCoin">Coin নির্বাচন করুন</label><select id="tradeCoin" onchange="setCoin(this.value)" style="width:100%;padding:12px;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:white"><option value="bitcoin">Bitcoin (BTC)</option></select></div>
+    <div class="field"><label>Amount <span id="tradeSymbol">BTC</span></label><input id="tradeAmount" type="number" min="0" step="any" placeholder="0.00"><small style="display:block;margin-top:6px;color:var(--muted)">ন্যূনতম অর্ডার 100 USDT (আনুমানিক USD মূল্য)</small></div>
     <div class="field"><label>Estimated total <span>USD</span></label><input id="tradeTotal" readonly placeholder="0.00"></div>
-    <button class="btn-blue wide" onclick="previewTrade()">Preview order</button>
-    <div id="tradeMsg" class="footnote">Sign in to preview a simulated order.</div>
+    <button id="tradeOrderButton" class="btn-blue wide" disabled onclick="previewTrade()">Order / গ্রাহক সেবায় যোগাযোগ</button>
+    <div id="tradeMsg" class="footnote">আপনার নির্বাচিত কয়েন ও পরিমাণ নিয়ে কাস্টমার সাপোর্টে যোগাযোগ করুন।</div><div class="footnote">স্বচ্ছ যোগাযোগ, লেনদেনের আগে মূল্য ও নেটওয়ার্ক যাচাই, এবং আপনার অ্যাকাউন্টের তথ্যের গোপনীয়তা—আমাদের অগ্রাধিকার। পাসওয়ার্ড, OTP বা private key কখনো শেয়ার করবেন না।</div>
    </section>
    <section class="card" id="wallet" style="margin-top:18px">
     <div class="section-head"><h2>Wallet</h2><span class="muted small">USDT</span></div>
     <div class="metric-label">Total account balance</div><div class="balance">0.00 <span class="muted" style="font-size:14px">USDT</span></div>
     <div class="actions-grid" style="margin-top:17px"><button class="btn-green" onclick="openSupport('deposit')">Deposit</button><button class="btn-red" onclick="openSupport('withdraw')">Withdraw</button></div>
-    <div class="footnote">These buttons open the listed support contact only. No payment, deposit, or withdrawal is performed on this page.</div>
+    <div class="footnote">আপনার অ্যাকাউন্টের নিরাপত্তা আমাদের কাছে গুরুত্বপূর্ণ। ডিপোজিট বা উত্তোলনের আগে ঠিকানা ও পরিমাণ যাচাই করুন এবং প্রয়োজনে কাস্টমার সাপোর্টের সহায়তা নিন।</div>
    </section>
-   <section class="card" style="margin-top:18px"><div class="section-head"><h2>Account Security</h2></div><p class="muted small">Use the login panel to explore the interface. This browser-only preview does not create a secure server account. Do not enter a password you use elsewhere.</p><button class="btn-quiet wide" onclick="openAuth('register')">Create preview account</button></section>
+   <section class="card" style="margin-top:18px"><div class="section-head"><h2>Account Security</h2></div><p class="muted small">আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে শক্তিশালী ও আলাদা পাসওয়ার্ড ব্যবহার করুন। কোনো অবস্থাতেই পাসওয়ার্ড, OTP বা private key অন্যের সঙ্গে শেয়ার করবেন না।</p><button class="btn-quiet wide" onclick="openAuth('register')">Create account</button></section>
   </aside>
  </div>
 </main>
@@ -67,14 +67,14 @@
 <div class="overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
   <div class="modal-top"><h2 id="authTitle">Welcome back</h2><button class="x" onclick="closeAuth()">✕</button></div>
-  <div class="muted small">Preview account only. Never reuse an important password here.</div>
+  <div class="muted small">আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে শক্তিশালী ও আলাদা পাসওয়ার্ড ব্যবহার করুন।</div>
   <div class="switch"><button id="loginMode" class="active" onclick="setAuthMode('login')">Login</button><button id="registerMode" onclick="setAuthMode('register')">Register</button></div>
   <form id="authForm">
    <div class="field"><label>Mobile number</label><div style="display:flex;gap:8px"><select id="countryCode" aria-label="Country code" style="width:115px;padding:12px;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:white"><option value="+880">🇧🇩 +880</option><option value="+91">🇮🇳 +91</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+971">🇦🇪 +971</option><option value="+60">🇲🇾 +60</option><option value="+966">🇸🇦 +966</option></select><input id="phone" type="tel" autocomplete="tel" placeholder="Mobile number" required minlength="5" style="flex:1;min-width:0"></div></div>
    <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required minlength="6"></div>
    <button id="authSubmit" class="btn-blue wide" type="submit">Login</button><div id="authMsg" class="msg"></div><button id="authForgotButton" type="button" onclick="openForgotPasswordFromAuth()" style="display:block;margin:7px auto 0;padding:4px 8px;background:transparent;color:var(--muted);font-size:12px;text-decoration:underline">Forgot password?</button>
   </form>
-  <div class="footnote">This prototype stores account details only in this browser session and is not suitable for real users or real funds.</div>
+  <div class="footnote">আপনার আস্থা ও নিরাপত্তা আমাদের কাছে গুরুত্বপূর্ণ। শক্তিশালী ও আলাদা পাসওয়ার্ড ব্যবহার করুন; OTP, পাসওয়ার্ড বা private key কারও সঙ্গে শেয়ার করবেন না। লেনদেনের আগে সব তথ্য যাচাই করুন।</div>
  </div>
 </div>
 <div class="overlay" id="supportOverlay" onclick="if(event.target===this)closeSupport()">
@@ -104,13 +104,13 @@
    </div>
   </div>
   <form id="withdrawForm" class="hidden">
-   <p class="muted">Withdrawal address ও amount লিখুন। এই প্রিভিউতে বাস্তব withdrawal সম্পন্ন হবে না।</p>
+   <p class="muted">Withdrawal address ও amount লিখুন। নিশ্চিত করার আগে সব তথ্য সতর্কভাবে যাচাই করুন।</p>
    <div class="field"><label for="withdrawAddress">Withdrawal address</label><input id="withdrawAddress" type="text" placeholder="Withdrawal address লিখুন" required></div>
    <div class="field"><label for="withdrawAmount">Amount (USDT)</label><input id="withdrawAmount" type="number" min="0.000001" step="any" placeholder="Amount লিখুন" required></div>
    <button class="btn-red wide" type="submit">Confirm Withdraw</button>
    <div id="withdrawMsg" class="msg"></div>
   </form>
-  <div class="footnote">এটি একটি browser preview; কোনো deposit বা withdrawal প্রসেস করা হয় না। পাসওয়ার্ড, OTP বা private key কাউকে দেবেন না।</div>
+  <div class="footnote">আপনার নিরাপত্তা ও গোপনীয়তাকে গুরুত্ব দিন। পাসওয়ার্ড, OTP বা private key কারও সঙ্গে শেয়ার করবেন না।</div>
  </div>
 </div>
 <div class="overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
@@ -137,11 +137,12 @@ const coinList=[
  ['bitcoin-cash','Bitcoin Cash','BCH'],['litecoin','Litecoin','LTC'],['stellar','Stellar','XLM'],['near','NEAR Protocol','NEAR'],['uniswap','Uniswap','UNI']
 ];
 let prices={}, selectedCoin=coinList[0], side='Buy', authMode='login', currentUser=null;
+const tradeCoinSelect=document.getElementById('tradeCoin');tradeCoinSelect.innerHTML=coinList.map(c=>`<option value="${escAttr(c[0])}">${esc(c[1])} (${esc(c[2])})</option>`).join('');
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:Number(n)<1?6:2}):'—';
 const shortMoney=n=>Number.isFinite(Number(n))?'$'+Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2}).format(n):'—';
 function setSide(s){side=s;document.getElementById('buyTab').classList.toggle('active',s==='Buy');document.getElementById('sellTab').classList.toggle('active',s==='Sell');}
-function setCoin(id){selectedCoin=coinList.find(c=>c[0]===id)||coinList[0];document.getElementById('tradeCoin').value=selectedCoin[1]+' ('+selectedCoin[2]+')';document.getElementById('tradeSymbol').textContent=selectedCoin[2];calcTrade();}
-function calcTrade(){let amount=Number(document.getElementById('tradeAmount').value)||0;let p=prices[selectedCoin[0]]?.usd;document.getElementById('tradeTotal').value=p&&amount>0?(p*amount).toFixed(2):'';}
+function setCoin(id){selectedCoin=coinList.find(c=>c[0]===id)||coinList[0];document.getElementById('tradeCoin').value=selectedCoin[0];document.getElementById('tradeSymbol').textContent=selectedCoin[2];calcTrade();}
+function calcTrade(){let amount=Number(document.getElementById('tradeAmount').value)||0;let p=prices[selectedCoin[0]]?.usd;let total=p&&amount>0?p*amount:0;document.getElementById('tradeTotal').value=total>0?total.toFixed(2):'';const orderButton=document.getElementById('tradeOrderButton');orderButton.disabled=total<100;const msg=document.getElementById('tradeMsg');if(total>0&&total<100){msg.textContent='ন্যূনতম অর্ডার 100 USDT। পরিমাণ বাড়ান; আনুমানিক মূল্য 100 USD বা তার বেশি হলে Order বাটন চালু হবে।'}else if(total>=100){msg.textContent='পরিমাণ গ্রহণযোগ্য। Order বাটনে ক্লিক করে কাস্টমার সাপোর্টে যোগাযোগ করুন।'}else{msg.textContent='কয়েন ও পরিমাণ নির্বাচন করুন। ন্যূনতম অর্ডার 100 USDT।'}}
 document.getElementById('tradeAmount').addEventListener('input',calcTrade);
 async function loadMarkets(){
  const status=document.getElementById('marketStatus'), rows=document.getElementById('marketRows');
@@ -152,7 +153,7 @@ async function loadMarkets(){
   if(!res.ok)throw new Error('Market API unavailable');
   const data=await res.json();prices={};data.forEach(d=>prices[d.id]={usd:d.current_price,change:d.price_change_percentage_24h,cap:d.market_cap});
   if(!data.length)throw new Error('No market data');
-  rows.innerHTML=data.map(d=>{let c=coinList.find(x=>x[0]===d.id)||[d.id,d.name,d.symbol.toUpperCase()];let change=Number(d.price_change_percentage_24h);return `<tr><td><div class="coin"><span class="coin-icon">${esc(c[2].slice(0,1))}</span><span>${esc(c[1])}<small>${esc(c[2])}</small></span></div></td><td class="price">${fmt(d.current_price)}</td><td class="${change>=0?'green':'red'}">${Number.isFinite(change)?(change>=0?'+':'')+change.toFixed(2)+'%':'—'}</td><td>${shortMoney(d.market_cap)}</td><td><button class="btn-quiet small" onclick="chooseCoin('${escAttr(d.id)}')">Trade</button></td></tr>`}).join('');
+  rows.innerHTML=data.map(d=>{let c=coinList.find(x=>x[0]===d.id)||[d.id,d.name,d.symbol.toUpperCase()];let change=Number(d.price_change_percentage_24h);return `<tr><td><div class="coin" role="button" tabindex="0" style="cursor:pointer" onclick="chooseCoin('${escAttr(d.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseCoin('${escAttr(d.id)}')}"><span class="coin-icon">${esc(c[2].slice(0,1))}</span><span>${esc(c[1])}<small>${esc(c[2])}</small></span></div></td><td class="price">${fmt(d.current_price)}</td><td class="${change>=0?'green':'red'}">${Number.isFinite(change)?(change>=0?'+':'')+change.toFixed(2)+'%':'—'}</td><td>${shortMoney(d.market_cap)}</td><td><button class="btn-quiet small" onclick="chooseCoin('${escAttr(d.id)}')">Trade</button></td></tr>`}).join('');
   document.getElementById('topBTC').textContent=fmt(prices.bitcoin?.usd);document.getElementById('topETH').textContent=fmt(prices.ethereum?.usd);
   setChange('btcChange',prices.bitcoin?.change);setChange('ethChange',prices.ethereum?.change);
   status.textContent='Updated '+new Date().toLocaleTimeString();
@@ -169,7 +170,7 @@ async function loadMarkets(){
 }
 }
 function setChange(id,v){let el=document.getElementById(id);if(!Number.isFinite(Number(v))){el.textContent='24h change unavailable';return}el.textContent=(v>=0?'+':'')+Number(v).toFixed(2)+'% in 24h';el.className=(v>=0?'green':'red')+' small'}
-function chooseCoin(id){setCoin(id);document.getElementById('trade').scrollIntoView({behavior:'smooth'});document.getElementById('tradeMsg').textContent='Selected '+selectedCoin[1]+'. Orders are preview-only.'}
+function chooseCoin(id){setCoin(id);document.getElementById('trade').scrollIntoView({behavior:'smooth'});document.getElementById('tradeMsg').textContent=selectedCoin[1]+' নির্বাচন করা হয়েছে। পরিমাণ দিয়ে Order বাটনে ক্লিক করে কাস্টমার সাপোর্টে যোগাযোগ করুন।'}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function escAttr(s){return String(s).replace(/[^a-z0-9-]/gi,'')}
 function openAuth(mode){setAuthMode(mode);document.getElementById('authOverlay').classList.add('show')}
@@ -192,26 +193,60 @@ function putAccounts(a){
   try { window.localStorage.setItem('novax_preview_accounts',JSON.stringify(a)); return; } catch(e) {}
   try { window.sessionStorage.setItem('novax_preview_accounts',JSON.stringify(a)); } catch(e) {}
 }
+function normalizePhone(raw, code){
+ const input=String(raw||'').trim().replace(/[\s().-]/g,'');
+ let phone;
+ if(input.startsWith('+')) phone='+'+input.slice(1).replace(/\D/g,'');
+ else phone=code+input.replace(/\D/g,'').replace(/^0+/,'');
+ return phone;
+}
+function isValidInternationalPhone(phone){
+ if(!/^\+[1-9]\d{7,14}$/.test(phone)) return false;
+ // Bangladesh mobile numbers must use the complete +8801XXXXXXXXX format.
+ if(phone.startsWith('+880')) return /^\+8801\d{9}$/.test(phone);
+ return true;
+}
 document.getElementById('authForm').addEventListener('submit',e=>{
  e.preventDefault();
- const rawPhone=document.getElementById('phone').value.trim().replace(/[\s()-]/g,'').replace(/^0+/, '');
+ const rawPhone=document.getElementById('phone').value;
  const code=document.getElementById('countryCode').value;
- const phone=(rawPhone.startsWith('+')?rawPhone:code+rawPhone).replace(/[^+0-9]/g,'');
- const password=document.getElementById('password').value;const msg=document.getElementById('authMsg');let accounts=getAccounts();
- if(phone.replace(/\\D/g,'').length<7||password.length<6){msg.textContent='Enter a valid mobile number and a password with at least 6 characters.';return}
+ const phone=normalizePhone(rawPhone,code);
+ const password=document.getElementById('password').value;
+ const msg=document.getElementById('authMsg');
+ let accounts=getAccounts();
+ msg.style.color='#ffc2cb';
+ if(!isValidInternationalPhone(phone)){
+   msg.textContent='সঠিক country code-সহ সম্পূর্ণ মোবাইল নম্বর লিখুন, যেমন +8801XXXXXXXXX।';
+   return;
+ }
+ if(password.length<6){
+   msg.textContent='পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';
+   return;
+ }
  if(authMode==='register'){
-   if(accounts[phone]){msg.textContent='This phone number already has a preview account. Please log in.';return}
-   accounts[phone]=password; putAccounts(accounts); currentUser=phone;
-   msg.style.color='#70e3b6'; msg.textContent='Account registered successfully.';
+   if(Object.prototype.hasOwnProperty.call(accounts,phone)){
+     msg.textContent='এই মোবাইল নম্বর দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট খোলা হয়েছে। অনুগ্রহ করে Login করুন।';
+     return;
+   }
+   accounts[phone]=password;
+   putAccounts(accounts);
+   currentUser=phone;
+   msg.style.color='#70e3b6';
+   msg.textContent='Account registered successfully.';
    finishLogin();
  } else {
-   if(!accounts[phone]||accounts[phone]!==password){msg.textContent='Incorrect phone number or password.';return}
-   currentUser=phone; finishLogin();
+   // A matching phone number alone is never enough: the password must match.
+   if(!Object.prototype.hasOwnProperty.call(accounts,phone)||accounts[phone]!==password){
+     msg.textContent='মোবাইল নম্বর অথবা পাসওয়ার্ড সঠিক নয়।';
+     return;
+   }
+   currentUser=phone;
+   finishLogin();
  }
 });
-function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;document.getElementById('tradeMsg').textContent='Signed in to browser preview. Orders are not sent to an exchange.';closeAuth()}
+function finishLogin(){document.getElementById('authButton').classList.add('hidden');document.getElementById('logoutButton').classList.remove('hidden');document.getElementById('settingsButton').classList.remove('hidden');document.getElementById('userBadge').classList.remove('hidden');document.getElementById('userBadge').textContent=currentUser;document.getElementById('tradeMsg').textContent='আপনি লগইন করেছেন। অর্ডার দেওয়ার আগে সব তথ্য যাচাই করুন।';closeAuth()}
 function logout(){currentUser=null;document.getElementById('authButton').classList.remove('hidden');document.getElementById('logoutButton').classList.add('hidden');document.getElementById('settingsButton').classList.add('hidden');document.getElementById('userBadge').classList.add('hidden');document.getElementById('tradeMsg').textContent='Sign in to preview a simulated order.'}
-function previewTrade(){let amount=Number(document.getElementById('tradeAmount').value);if(!currentUser){openAuth('login');return}if(!amount||amount<=0){document.getElementById('tradeMsg').textContent='Enter an amount first.';return}document.getElementById('tradeMsg').textContent=side+' preview: '+amount+' '+selectedCoin[2]+' ≈ '+(document.getElementById('tradeTotal').value||'—')+' USD. No real order placed.'}
+function previewTrade(){let amount=Number(document.getElementById('tradeAmount').value);let total=Number(document.getElementById('tradeTotal').value)||0;const tradeMsg=document.getElementById('tradeMsg');if(side==='Sell'){const balanceText=document.querySelector('#wallet .balance')?.childNodes[0]?.textContent||'0';const accountBalance=Number(balanceText.replace(/[^0-9.-]/g,''))||0;if(accountBalance<=0){tradeMsg.textContent='আপনার অ্যাকাউন্টে ব্যালেন্স নাই';tradeMsg.style.color='#ff8ba0';return}}if(total<100){tradeMsg.textContent='ন্যূনতম অর্ডার 100 USDT।';return}if(!amount||amount<=0){tradeMsg.textContent='অনুগ্রহ করে সঠিক পরিমাণ লিখুন।';return}const message='NovaX '+side+' request: '+selectedCoin[1]+' ('+selectedCoin[2]+'), amount '+amount+', estimated USD '+(document.getElementById('tradeTotal').value||'not available')+'. Please confirm price and details.';tradeMsg.textContent='Telegram কাস্টমার সাপোর্ট খুলছে। মূল্য ও শর্তাবলি সাপোর্টের সঙ্গে নিশ্চিত করুন।';tradeMsg.style.color='';window.open('https://t.me/treasury_io','_blank','noopener,noreferrer');}
 const TELEGRAM_USERNAME='treasury_io'; // Telegram username without @
 function telegramUrl(){return 'https://t.me/'+TELEGRAM_USERNAME}
 function openTelegram(){window.open(telegramUrl(),'_blank','noopener,noreferrer')}
